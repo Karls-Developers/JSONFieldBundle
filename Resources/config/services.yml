@@ -3,6 +3,3 @@ services:
   Karls\JSONFieldBundle\Field\Types\JSONFieldType:
     arguments: ['@doctrine.orm.entity_manager', '@service_container']
     tags: [unite_cms.field_type]
-
-  Karls\JSONFieldBundle\SchemaType\Types\Input\JSONFieldInputType:
-    tags: [unite_cms.graphql.schema_type]

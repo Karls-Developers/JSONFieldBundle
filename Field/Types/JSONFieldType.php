@@ -73,14 +73,6 @@ class JSONFieldType extends FieldType
     /**
      * {@inheritdoc}
      */
-    function getGraphQLInputType(FieldableField $field, SchemaTypeManager $schemaTypeManager, $nestingLevel = 0)
-    {
-        return $schemaTypeManager->getSchemaType('JSONFieldInput');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     function resolveGraphQLData(FieldableField $field, $value, FieldableContent $content)
     {
         // return NULL on empty value
