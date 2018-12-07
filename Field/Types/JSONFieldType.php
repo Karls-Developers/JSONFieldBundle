@@ -2,9 +2,24 @@
 
 namespace Karls\JSONFieldBundle\Field\Types;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Twig\TwigEngine;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Form\Exception\InvalidArgumentException;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\Security\Csrf\CsrfTokenManager;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use UniteCMS\CoreBundle\Entity\Content;
+use UniteCMS\CoreBundle\Entity\ContentType;
+use UniteCMS\CoreBundle\Entity\Domain;
+use UniteCMS\CoreBundle\Entity\FieldableContent;
+use UniteCMS\CoreBundle\Entity\FieldableField;
+use UniteCMS\CoreBundle\Entity\View;
 use UniteCMS\CoreBundle\Exception\ContentAccessDeniedException;
 use UniteCMS\CoreBundle\Exception\ContentTypeAccessDeniedException;
 use UniteCMS\CoreBundle\Exception\DomainAccessDeniedException;
@@ -12,31 +27,16 @@ use UniteCMS\CoreBundle\Exception\InvalidFieldConfigurationException;
 use UniteCMS\CoreBundle\Exception\MissingContentTypeException;
 use UniteCMS\CoreBundle\Exception\MissingDomainException;
 use UniteCMS\CoreBundle\Exception\MissingOrganizationException;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Twig\TwigEngine;
-use Symfony\Component\Form\Exception\InvalidArgumentException;
-use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
-use Symfony\Component\Security\Csrf\CsrfTokenManager;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
-use UniteCMS\CoreBundle\Entity\Content;
-use UniteCMS\CoreBundle\Entity\FieldableContent;
-use UniteCMS\CoreBundle\Entity\FieldableField;
+use UniteCMS\CoreBundle\Field\FieldableFieldSettings;
+use UniteCMS\CoreBundle\Field\FieldType;
 use UniteCMS\CoreBundle\Form\ReferenceType;
 use UniteCMS\CoreBundle\SchemaType\IdentifierNormalizer;
+use UniteCMS\CoreBundle\SchemaType\SchemaTypeManager;
+use UniteCMS\CoreBundle\Security\Voter\ContentVoter;
 use UniteCMS\CoreBundle\Security\Voter\DomainVoter;
+use UniteCMS\CoreBundle\Service\UniteCMSManager;
 use UniteCMS\CoreBundle\View\ViewTypeInterface;
 use UniteCMS\CoreBundle\View\ViewTypeManager;
-use UniteCMS\CoreBundle\Entity\View;
-use UniteCMS\CoreBundle\Entity\ContentType;
-use UniteCMS\CoreBundle\Entity\Domain;
-use UniteCMS\CoreBundle\Field\FieldType;
-use UniteCMS\CoreBundle\Security\Voter\ContentVoter;
-use UniteCMS\CoreBundle\Service\UniteCMSManager;
-use UniteCMS\CoreBundle\SchemaType\SchemaTypeManager;
-use UniteCMS\CoreBundle\Field\FieldableFieldSettings;
-use Symfony\Component\DependencyInjection\Container;
 
 class JSONFieldType extends FieldType
 {
@@ -63,9 +63,9 @@ class JSONFieldType extends FieldType
         $this->container = $container;
     }
 
-    function getFormOptions(FieldableField $field): array
+    function getFormOptions(FieldableField $field)
     {
-        $this->settings = (array) $field->getSettings();
+        $this->settings = (array)$field->getSettings();
 
         return parent::getFormOptions($field);
     }
@@ -73,7 +73,8 @@ class JSONFieldType extends FieldType
     /**
      * {@inheritdoc}
      */
-    function getGraphQLInputType(FieldableField $field, SchemaTypeManager $schemaTypeManager, $nestingLevel = 0) {
+    function getGraphQLInputType(FieldableField $field, SchemaTypeManager $schemaTypeManager, $nestingLevel = 0)
+    {
         return $schemaTypeManager->getSchemaType('JSONFieldInput');
     }
 
@@ -83,11 +84,10 @@ class JSONFieldType extends FieldType
     function resolveGraphQLData(FieldableField $field, $value, FieldableContent $content)
     {
         // return NULL on empty value
-        if (empty($value))
-        {
-            return NULL;
+        if (empty($value)) {
+            return null;
         }
-//        return (string) $value;
+
         return $value;
     }
 
@@ -104,37 +104,4 @@ class JSONFieldType extends FieldType
             return;
         }
     }
-
-//    /**
-//     * {@inheritdoc}
-//     */
-//    function validateData(FieldableField $field, $data, ExecutionContextInterface $context) {
-//        if (empty($data) || !count($context->getValue()) || !$this->settings['source']) {
-//            return;
-//        }
-//
-////        $this->checkIfSlugStillExists($this->slugify($context->getValue()[$this->settings['source']]), $context, $field->getContentType());
-//    }
-
-//    /**
-//     * {@inheritdoc}
-//     */
-//    public function onCreate(FieldableField $field, FieldableContent $content, EntityRepository $repository, &$data) {
-//        if(isset($this->settings['source'])) {
-//            $data["slug"] = $this->slugify($data[$this->settings['source']]);
-//            $content->setData($data);
-//            $this->container->get('validator')->validate($content);
-//        }
-//    }
-//
-//    /**
-//     * {@inheritdoc}
-//     */
-//    public function onUpdate(FieldableField $field, FieldableContent $content, EntityRepository $repository, $old_data, &$data) {
-//        if(isset($this->settings['source'])) {
-//            $data["slug"] = $this->slugify($data[$this->settings['source']]);
-//            $content->setData($data);
-//            $this->container->get('validator')->validate($content);
-//        }
-//    }
 }
