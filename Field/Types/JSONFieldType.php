@@ -63,13 +63,6 @@ class JSONFieldType extends FieldType
         $this->container = $container;
     }
 
-    function getFormOptions(FieldableField $field)
-    {
-        $this->settings = (array)$field->getSettings();
-
-        return parent::getFormOptions($field);
-    }
-
     /**
      * {@inheritdoc}
      */
