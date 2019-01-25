@@ -1,10 +1,10 @@
 {
     "name": "karls/json-field-bundle",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "type": "symfony-bundle",
     "description": "Provides a JSON Field to Unite CMS.",
     "require": {
-        "unite-cms/core-bundle": "^0.7"
+        "unite-cms/core-bundle": "^0.8"
     },
     "autoload": {
         "psr-4": { "Karls\\JSONFieldBundle\\": "" },
