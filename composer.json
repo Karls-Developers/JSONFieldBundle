@@ -1,6 +1,6 @@
 {
     "name": "karls/json-field-bundle",
-    "version": "1.0.3",
+    "version": "1.1.0",
     "type": "symfony-bundle",
     "description": "Provides a JSON Field to Unite CMS.",
     "require": {
