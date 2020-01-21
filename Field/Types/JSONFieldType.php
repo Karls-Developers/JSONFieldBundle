@@ -37,6 +37,7 @@ use UniteCMS\CoreBundle\Security\Voter\DomainVoter;
 use UniteCMS\CoreBundle\Service\UniteCMSManager;
 use UniteCMS\CoreBundle\View\ViewTypeInterface;
 use UniteCMS\CoreBundle\View\ViewTypeManager;
+use GraphQL\Type\Definition\ResolveInfo;
 
 class JSONFieldType extends FieldType
 {
@@ -66,7 +67,7 @@ class JSONFieldType extends FieldType
     /**
      * {@inheritdoc}
      */
-    function resolveGraphQLData(FieldableField $field, $value, FieldableContent $content)
+    function resolveGraphQLData(FieldableField $field, $value, FieldableContent $content, array $args, $context, ResolveInfo $info)
     {
         // return NULL on empty value
         if (empty($value)) {

@@ -4,7 +4,7 @@
     "type": "symfony-bundle",
     "description": "Provides a JSON Field to Unite CMS.",
     "require": {
-        "unite-cms/core-bundle": "^0.8"
+        "unite-cms/core-bundle": ">=0.9"
     },
     "autoload": {
         "psr-4": { "Karls\\JSONFieldBundle\\": "" },
